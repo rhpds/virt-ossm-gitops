@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fedora-cars
+  namespace: default
+spec:
+  ports:
+    - port: 8300
+      name: tcp
+  selector:
+    kubevirt.io/domain: fedora-cars   
+
