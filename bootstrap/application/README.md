@@ -91,7 +91,7 @@ podman run -dt -p 8000:8000 \
 -e  DISCOUNTS_SERVICE='http://fedora-discounts.travel-agency.svc.cluster.local:8000' \
 -e  MYSQL_DATABASE='test' \
 quay.io/kiali/demo_travels_cars:v1
-
+```
 
 
 ## INSURANCES
