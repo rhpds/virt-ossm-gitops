@@ -1,8 +1,8 @@
-# Script to  podman pull quay.io/kiali/demo_travels_cars:v1
+# Script to  podman pull quay.io/kiali/demo_travels_flights:v1
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: fedora-cars
+  name: fedora-flights
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -10,7 +10,7 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: fedora-cars
+        name: fedora-flights
       spec:
         sourceRef:
           kind: DataSource
@@ -29,7 +29,7 @@ spec:
         vm.kubevirt.io/workload: server
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: fedora-cars
+        kubevirt.io/domain: fedora-flights
         kubevirt.io/size: small
         network.kubevirt.io/headlessService: headless
     spec:
@@ -48,9 +48,7 @@ spec:
                 bus: virtio
               name: cloudinitdisk
           interfaces:
-            - macAddress: '02:ba:c7:00:00:03'
-              masquerade: {}
-              model: virtio
+            - masquerade: {}
               name: default
           rng: {}
         features:
@@ -71,7 +69,7 @@ spec:
       terminationGracePeriodSeconds: 180
       volumes:
         - dataVolume:
-            name: fedora-cars
+            name: fedora-flights
           name: rootdisk
         - cloudInitNoCloud:
             userData: |-

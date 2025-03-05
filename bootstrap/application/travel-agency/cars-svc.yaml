@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: fedora-cars
-  namespace: default
+  namespace: travel-agency
 spec:
   ports:
-    - port: 8300
+    - port: 8000
       name: tcp
   selector:
     kubevirt.io/domain: fedora-cars   

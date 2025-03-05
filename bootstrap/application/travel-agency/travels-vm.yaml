@@ -1,8 +1,8 @@
-# Script to  podman pull quay.io/kiali/demo_travels_mysqldb:v1
+# Script to  podman pull quay.io/kiali/demo_travels_travels:v1
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: fedora-mysqldb
+  name: fedora-travels
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -10,7 +10,7 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: fedora-mysqldb
+        name: fedora-travels
       spec:
         sourceRef:
           kind: DataSource
@@ -29,7 +29,7 @@ spec:
         vm.kubevirt.io/workload: server
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: fedora-mysqldb
+        kubevirt.io/domain: fedora-travels
         kubevirt.io/size: small
         network.kubevirt.io/headlessService: headless
     spec:
@@ -48,9 +48,7 @@ spec:
                 bus: virtio
               name: cloudinitdisk
           interfaces:
-            - macAddress: '02:ba:c7:00:00:02'
-              masquerade: {}
-              model: virtio
+            - masquerade: {}
               name: default
           rng: {}
         features:
@@ -71,13 +69,12 @@ spec:
       terminationGracePeriodSeconds: 180
       volumes:
         - dataVolume:
-            name: fedora-mysqldb
+            name: fedora-travels
           name: rootdisk
         - cloudInitNoCloud:
             userData: |-
               #cloud-config
               user: fedora
-              password: g8ml-kx66-7nyl
+              password: ukqo-2vq4-xdjf
               chpasswd: { expire: False }
           name: cloudinitdisk
-
