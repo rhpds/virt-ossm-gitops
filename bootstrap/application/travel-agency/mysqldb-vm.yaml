@@ -77,5 +77,6 @@ spec:
               user: fedora
               password: g8ml-kx66-7nyl
               chpasswd: { expire: False }
+              ssh_pwauth: true
           name: cloudinitdisk
 
