@@ -1,3 +1,54 @@
+## Podman Quadlet info
+
+Here is an example Quadlet file:
+
+```sh
+cat $HOME/.config/containers/systemd/mysleep.container
+
+[Unit]
+Description=The sleep container
+After=local-fs.target
+
+[Container]
+Image=registry.access.redhat.com/ubi9-minimal:latest
+Exec=sleep 1000
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
+```
+
+Put the Quadlet file for rootful containers here:
+
+````
+/usr/share/containers/systemd/
+
+/etc/containers/systemd/
+````
+
+Put the Quadlet file for rootless containers here:
+
+```sh
+$HOME/.config/containers/systemd/
+```
+
+Reload systemd daemon (this triggers the generation of the systemd unit file from the Quadlet) and start the service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl start mysql-db.service
+
+sudo systemctl status mysql-db.service
+```
+
+You can validate the generation of the systemd unit file with this command:
+
+```bash
+/usr/libexec/podman/quadlet -dryrun -user
+```
+
+## Installing the VMs manually
+
 ```
 oc apply -f applications/namespaces.yaml
 ```
