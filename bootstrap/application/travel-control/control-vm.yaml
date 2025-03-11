@@ -2,7 +2,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: fedora-control
+  name: travel-control-vm
   namespace: travel-control
 spec:
   dataVolumeTemplates:
@@ -27,11 +27,13 @@ spec:
         vm.kubevirt.io/flavor: small
         vm.kubevirt.io/os: fedora
         vm.kubevirt.io/workload: server
+        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: fedora-control
+        kubevirt.io/domain: travel-control
         kubevirt.io/size: small
-        network.kubevirt.io/headlessService: headless
+        app: travel-control
+        version: v1
     spec:
       architecture: amd64
       domain:
@@ -78,4 +80,27 @@ spec:
               password: ukqo-2vq4-xdjf
               chpasswd: { expire: False }
               ssh_pwauth: true
+              runcmd:
+              - [ sudo, systemctl, daemon-reload ]
+              - [ sudo, systemctl, start, control.service ]
+              write_files:
+              - content: |
+                  [Unit]
+                  Description=Fedora Control Container
+
+                  [Container]
+                  Label=app=control-container
+                  ContainerName=control-container
+                  Image=quay.io/kiali/demo_travels_control:v1
+                  Environment=PORTAL_SERVICES='voyages.fr;http://voyages.travel-portal.svc.cluster.local:8000,viaggi.it;http://viaggi.travel-portal.svc.cluster.local:8000,travels.uk;http://travels.travel-portal.svc.cluster.local:8000'
+                  PodmanArgs=-p 8080:8080
+
+                  [Install]
+                  WantedBy=multi-user.target default.target
+
+                  [Service]
+                  Restart=always
+                path: /etc/containers/systemd/users/control.container
+                permissions: '0777'
+                owner: root:root
           name: cloudinitdisk
