@@ -2,7 +2,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: fedora-mysqldb
+  name: mysqldb-vm
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -27,11 +27,13 @@ spec:
         vm.kubevirt.io/flavor: small
         vm.kubevirt.io/os: fedora
         vm.kubevirt.io/workload: server
+        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: fedora-mysqldb
+        kubevirt.io/domain: mysqldb
         kubevirt.io/size: small
-        network.kubevirt.io/headlessService: headless
+        app: mysqldb
+        version: v1
     spec:
       architecture: amd64
       domain:
@@ -78,5 +80,27 @@ spec:
               password: g8ml-kx66-7nyl
               chpasswd: { expire: False }
               ssh_pwauth: true
-          name: cloudinitdisk
+              runcmd:
+              - [ sudo, systemctl, daemon-reload ]
+              - [ sudo, systemctl, start, mysql-db.service ]
+              write_files:
+              - content: |
+                  [Unit]
+                  Description=MySQL Database Container
 
+                  [Container]
+                  Label=app=mysql-container
+                  ContainerName=mysql-container
+                  Image=quay.io/kiali/demo_travels_mysqldb:v1
+                  Environment=MYSQL_ROOT_PASSWORD=mysqldbpass
+                  PodmanArgs=-p 3306:3306
+
+                  [Install]
+                  WantedBy=multi-user.target default.target
+
+                  [Service]
+                  Restart=always
+                path: /etc/containers/systemd/users/mysql-db.container
+                permissions: '0777'
+                owner: root:root
+          name: cloudinitdisk

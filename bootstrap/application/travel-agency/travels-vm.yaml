@@ -2,7 +2,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: fedora-travels
+  name: travels-vm
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -27,11 +27,13 @@ spec:
         vm.kubevirt.io/flavor: small
         vm.kubevirt.io/os: fedora
         vm.kubevirt.io/workload: server
+        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: fedora-travels
+        kubevirt.io/domain: travels
         kubevirt.io/size: small
-        network.kubevirt.io/headlessService: headless
+        app: travels
+        version: v1
     spec:
       architecture: amd64
       domain:
@@ -78,4 +80,33 @@ spec:
               password: ukqo-2vq4-xdjf
               chpasswd: { expire: False }
               ssh_pwauth: true
+              runcmd:
+              - [ sudo, systemctl, daemon-reload ]
+              - [ sudo, systemctl, start, travels.service ]
+              write_files:
+              - content: |
+                  [Unit]
+                  Description=Fedora Travels Container
+
+                  [Container]
+                  Label=app=travel-container
+                  ContainerName=travel-container
+                  Image=quay.io/kiali/demo_travels_travels:v1
+                  Environment=CURRENT_SERVICE='travels'
+                  Environment=CURRENT_VERSION='v1'
+                  Environment=LISTEN_ADDRESS=':8000'
+                  Environment=FLIGHTS_SERVICE='http://flights.travel-agency.svc.cluster.local:8000'
+                  Environment=HOTELS_SERVICE='http://hotels.travel-agency.svc.cluster.local:8000'
+                  Environment=CARS_SERVICE='http://cars.travel-agency.svc.cluster.local:8000'
+                  Environment=INSURANCES_SERVICE='http://insurances.travel-agency.svc.cluster.local:8000'
+                  PodmanArgs=-p 8000:8000
+
+                  [Install]
+                  WantedBy=multi-user.target default.target
+
+                  [Service]
+                  Restart=always
+                path: /etc/containers/systemd/users/travels.container
+                permissions: '0777'
+                owner: root:root
           name: cloudinitdisk

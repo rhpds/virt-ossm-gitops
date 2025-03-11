@@ -2,7 +2,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: fedora-hotels
+  name: hotels-vm
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -27,11 +27,13 @@ spec:
         vm.kubevirt.io/flavor: small
         vm.kubevirt.io/os: fedora
         vm.kubevirt.io/workload: server
+        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: fedora-hotels
+        kubevirt.io/domain: hotels
         kubevirt.io/size: small
-        network.kubevirt.io/headlessService: headless
+        app: hotels
+        version: v1
     spec:
       architecture: amd64
       domain:
@@ -78,4 +80,34 @@ spec:
               password: ukqo-2vq4-xdjf
               chpasswd: { expire: False }
               ssh_pwauth: true
+              runcmd:
+              - [ sudo, systemctl, daemon-reload ]
+              - [ sudo, systemctl, start, hotels.service ]
+              write_files:
+              - content: |
+                  [Unit]
+                  Description=Fedora Hotels Container
+
+                  [Container]
+                  Label=app=hotels-container
+                  ContainerName=hotels-container
+                  Image=quay.io/kiali/demo_travels_hotels:v1
+                  Environment=CURRENT_SERVICE='hotels'
+                  Environment=CURRENT_VERSION='v1
+                  Environment=LISTEN_ADDRESS=':8000'
+                  Environment=MYSQL_SERVICE='mysqldb.travel-agency.svc.cluster.local:3306'
+                  Environment=MYSQL_USER='root'
+                  Environment=MYSQL_PASSWORD='mysqldbpass'
+                  Environment=DISCOUNTS_SERVICE='http://discounts.travel-agency.svc.cluster.local:8000'
+                  Environment=MYSQL_DATABASE='test'
+                  PodmanArgs=-p 8000:8000
+
+                  [Install]
+                  WantedBy=multi-user.target default.target
+
+                  [Service]
+                  Restart=always
+                path: /etc/containers/systemd/users/hotels.container
+                permissions: '0777'
+                owner: root:root
           name: cloudinitdisk

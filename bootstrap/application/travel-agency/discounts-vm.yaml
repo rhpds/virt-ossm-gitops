@@ -2,7 +2,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: fedora-discounts
+  name: discounts-vm
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -27,11 +27,13 @@ spec:
         vm.kubevirt.io/flavor: small
         vm.kubevirt.io/os: fedora
         vm.kubevirt.io/workload: server
+        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: fedora-discounts
+        kubevirt.io/domain: discounts
         kubevirt.io/size: small
-        network.kubevirt.io/headlessService: headless
+        app: discounts
+        version: v1
     spec:
       architecture: amd64
       domain:
@@ -78,4 +80,29 @@ spec:
               password: ukqo-2vq4-xdjf
               chpasswd: { expire: False }
               ssh_pwauth: true
+              runcmd:
+              - [ sudo, systemctl, daemon-reload ]
+              - [ sudo, systemctl, start, discounts.service ]
+              write_files:
+              - content: |
+                  [Unit]
+                  Description=Fedora Cars Container
+
+                  [Container]
+                  Label=app=discounts-container
+                  ContainerName=discounts-container
+                  Image=quay.io/kiali/demo_travels_discounts:v1
+                  Environment=CURRENT_SERVICE='discounts'
+                  Environment=CURRENT_VERSION='v1
+                  Environment=LISTEN_ADDRESS=':8000'
+                  PodmanArgs=-p 8000:8000
+
+                  [Install]
+                  WantedBy=multi-user.target default.target
+
+                  [Service]
+                  Restart=always
+                path: /etc/containers/systemd/users/discounts.container
+                permissions: '0777'
+                owner: root:root
           name: cloudinitdisk

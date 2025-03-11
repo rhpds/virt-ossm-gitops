@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: fedora-travels
+  name: travels
   namespace: travel-agency
+  labels:
+    app: travels
 spec:
   ports:
     - port: 8000
       name: tcp
   selector:
-    kubevirt.io/domain: fedora-travels   
+    kubevirt.io/domain: travels   
 

@@ -2,7 +2,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: travel-control-vm
+  name: control-vm
   namespace: travel-control
 spec:
   dataVolumeTemplates:
@@ -30,9 +30,9 @@ spec:
         sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: travel-control
+        kubevirt.io/domain: control
         kubevirt.io/size: small
-        app: travel-control
+        app: control
         version: v1
     spec:
       architecture: amd64
