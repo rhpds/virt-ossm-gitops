@@ -2,8 +2,8 @@
 apiVersion: maistra.io/v2
 kind: ServiceMeshControlPlane
 metadata:
-  name: {{ .Values.user }}-dev-basic
-  namespace: {{ .Values.user }}-dev-istio-system
+  name: basic
+  namespace: istio-system
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -29,7 +29,7 @@ spec:
       trafficControl:
         inbound: {}
         outbound:
-          policy: REGISTRY_ONLY
+          policy: ALLOW_ANY
   gateways:
     openshiftRoute:
       enabled: false          
