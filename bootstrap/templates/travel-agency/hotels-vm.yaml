@@ -1,8 +1,8 @@
-# Script to  podman pull quay.io/kiali/demo_travels_cars:v1
+# Script to  podman pull quay.io/kiali/demo_travels_hotels:v1
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: cars-vm
+  name: hotels-vm
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -10,7 +10,7 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: fedora-cars
+        name: fedora-hotels
       spec:
         sourceRef:
           kind: DataSource
@@ -30,9 +30,9 @@ spec:
 #        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: cars
+        kubevirt.io/domain: hotels
         kubevirt.io/size: small
-        app: cars
+        app: hotels
         version: v1
     spec:
       architecture: amd64
@@ -71,7 +71,7 @@ spec:
       terminationGracePeriodSeconds: 180
       volumes:
         - dataVolume:
-            name: fedora-cars
+            name: fedora-hotels
           name: rootdisk
         - cloudInitNoCloud:
             userData: |-
@@ -82,17 +82,17 @@ spec:
               ssh_pwauth: true
               runcmd:
               - [ sudo, systemctl, daemon-reload ]
-              - [ sudo, systemctl, start, cars.service ]
+              - [ sudo, systemctl, start, hotels.service ]
               write_files:
               - content: |
                   [Unit]
-                  Description=Fedora Cars Container
+                  Description=Fedora Hotels Container
 
                   [Container]
-                  Label=app=cars-container
-                  ContainerName=cars-container
-                  Image=quay.io/kiali/demo_travels_cars:v1
-                  Environment=CURRENT_SERVICE='cars'
+                  Label=app=hotels-container
+                  ContainerName=hotels-container
+                  Image=quay.io/kiali/demo_travels_hotels:v1
+                  Environment=CURRENT_SERVICE='hotels'
                   Environment=CURRENT_VERSION='v1
                   Environment=LISTEN_ADDRESS=':8000'
                   Environment=MYSQL_SERVICE='mysqldb.travel-agency.svc.cluster.local:3306'
@@ -107,7 +107,7 @@ spec:
 
                   [Service]
                   Restart=always
-                path: /etc/containers/systemd/users/cars.container
+                path: /etc/containers/systemd/users/hotels.container
                 permissions: '0777'
                 owner: root:root
           name: cloudinitdisk

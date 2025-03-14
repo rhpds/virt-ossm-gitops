@@ -10,5 +10,4 @@ spec:
     - port: 8000
       name: tcp
   selector:
-    kubevirt.io/domain: flights   
-
+    kubevirt.io/domain: flights

@@ -1,8 +1,8 @@
-# Script to  podman pull quay.io/kiali/demo_travels_travels:v1
+# Script to  podman pull quay.io/kiali/demo_travels_flights:v1
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: travels-vm
+  name: flights-vm
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -10,7 +10,7 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: fedora-travels
+        name: fedora-flights
       spec:
         sourceRef:
           kind: DataSource
@@ -30,9 +30,9 @@ spec:
 #        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: travels
+        kubevirt.io/domain: flights
         kubevirt.io/size: small
-        app: travels
+        app: flights
         version: v1
     spec:
       architecture: amd64
@@ -71,7 +71,7 @@ spec:
       terminationGracePeriodSeconds: 180
       volumes:
         - dataVolume:
-            name: fedora-travels
+            name: fedora-flights
           name: rootdisk
         - cloudInitNoCloud:
             userData: |-
@@ -82,23 +82,24 @@ spec:
               ssh_pwauth: true
               runcmd:
               - [ sudo, systemctl, daemon-reload ]
-              - [ sudo, systemctl, start, travels.service ]
+              - [ sudo, systemctl, start, flights.service ]
               write_files:
               - content: |
                   [Unit]
-                  Description=Fedora Travels Container
+                  Description=Fedora Cars Container
 
                   [Container]
-                  Label=app=travel-container
-                  ContainerName=travel-container
-                  Image=quay.io/kiali/demo_travels_travels:v1
-                  Environment=CURRENT_SERVICE='travels'
-                  Environment=CURRENT_VERSION='v1'
+                  Label=app=flights-container
+                  ContainerName=flights-container
+                  Image=quay.io/kiali/demo_travels_flights:v1
+                  Environment=CURRENT_SERVICE='flights'
+                  Environment=CURRENT_VERSION='v1
                   Environment=LISTEN_ADDRESS=':8000'
-                  Environment=FLIGHTS_SERVICE='http://flights.travel-agency.svc.cluster.local:8000'
-                  Environment=HOTELS_SERVICE='http://hotels.travel-agency.svc.cluster.local:8000'
-                  Environment=CARS_SERVICE='http://cars.travel-agency.svc.cluster.local:8000'
-                  Environment=INSURANCES_SERVICE='http://insurances.travel-agency.svc.cluster.local:8000'
+                  Environment=MYSQL_SERVICE='mysqldb.travel-agency.svc.cluster.local:3306'
+                  Environment=MYSQL_USER='root'
+                  Environment=MYSQL_PASSWORD='mysqldbpass'
+                  Environment=DISCOUNTS_SERVICE='http://discounts.travel-agency.svc.cluster.local:8000'
+                  Environment=MYSQL_DATABASE='test'
                   PodmanArgs=-p 8000:8000
 
                   [Install]
@@ -106,7 +107,7 @@ spec:
 
                   [Service]
                   Restart=always
-                path: /etc/containers/systemd/users/travels.container
+                path: /etc/containers/systemd/users/flights.container
                 permissions: '0777'
                 owner: root:root
           name: cloudinitdisk

@@ -1,8 +1,8 @@
-# Script to  podman pull quay.io/kiali/demo_travels_mysqldb:v1
+# Script to  podman pull quay.io/kiali/demo_travels_travels:v1
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: mysqldb-vm
+  name: travels-vm
   namespace: travel-agency
 spec:
   dataVolumeTemplates:
@@ -10,7 +10,7 @@ spec:
       kind: DataVolume
       metadata:
         creationTimestamp: null
-        name: fedora-mysqldb
+        name: fedora-travels
       spec:
         sourceRef:
           kind: DataSource
@@ -30,9 +30,9 @@ spec:
 #        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: mysqldb
+        kubevirt.io/domain: travels
         kubevirt.io/size: small
-        app: mysqldb
+        app: travels
         version: v1
     spec:
       architecture: amd64
@@ -71,36 +71,42 @@ spec:
       terminationGracePeriodSeconds: 180
       volumes:
         - dataVolume:
-            name: fedora-mysqldb
+            name: fedora-travels
           name: rootdisk
         - cloudInitNoCloud:
             userData: |-
               #cloud-config
               user: fedora
-              password: g8ml-kx66-7nyl
+              password: ukqo-2vq4-xdjf
               chpasswd: { expire: False }
               ssh_pwauth: true
               runcmd:
               - [ sudo, systemctl, daemon-reload ]
-              - [ sudo, systemctl, start, mysql-db.service ]
+              - [ sudo, systemctl, start, travels.service ]
               write_files:
               - content: |
                   [Unit]
-                  Description=MySQL Database Container
+                  Description=Fedora Travels Container
 
                   [Container]
-                  Label=app=mysql-container
-                  ContainerName=mysql-container
-                  Image=quay.io/kiali/demo_travels_mysqldb:v1
-                  Environment=MYSQL_ROOT_PASSWORD=mysqldbpass
-                  PodmanArgs=-p 3306:3306
+                  Label=app=travel-container
+                  ContainerName=travel-container
+                  Image=quay.io/kiali/demo_travels_travels:v1
+                  Environment=CURRENT_SERVICE='travels'
+                  Environment=CURRENT_VERSION='v1'
+                  Environment=LISTEN_ADDRESS=':8000'
+                  Environment=FLIGHTS_SERVICE='http://flights.travel-agency.svc.cluster.local:8000'
+                  Environment=HOTELS_SERVICE='http://hotels.travel-agency.svc.cluster.local:8000'
+                  Environment=CARS_SERVICE='http://cars.travel-agency.svc.cluster.local:8000'
+                  Environment=INSURANCES_SERVICE='http://insurances.travel-agency.svc.cluster.local:8000'
+                  PodmanArgs=-p 8000:8000
 
                   [Install]
                   WantedBy=multi-user.target default.target
 
                   [Service]
                   Restart=always
-                path: /etc/containers/systemd/users/mysql-db.container
+                path: /etc/containers/systemd/users/travels.container
                 permissions: '0777'
                 owner: root:root
           name: cloudinitdisk
