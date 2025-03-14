@@ -10,11 +10,3 @@ infoNamespace: openshift-gitops
 deployer:
   domain: apps.cluster-guid.sandbox.opentlc.com
   apiUrl: https://api.cluster-guid.sandbox.opentlc.com:6443
-
-ossm:
-  git:
-    url: https://github.com/redhat-gpte-devopsautomation/virt-ossm-gitops
-    revision: main
-    path: ossm
-  values:
-    myKey: myValue
