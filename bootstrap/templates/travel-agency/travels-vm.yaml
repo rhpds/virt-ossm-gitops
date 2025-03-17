@@ -81,8 +81,11 @@ spec:
               chpasswd: { expire: False }
               ssh_pwauth: true
               runcmd:
-              - [ sudo, systemctl, daemon-reload ]
-              - [ sudo, systemctl, start, travels.service ]
+              - | loginctl enable-linger fedora
+                  export XDG_RUNTIME_DIR=/run/user/$(id -u)
+                  export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+                  systemctl --user daemon-reload
+                  systemctl --user start travels.service
               write_files:
               - content: |
                   [Unit]
