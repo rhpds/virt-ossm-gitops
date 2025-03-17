@@ -30,9 +30,9 @@ spec:
 #        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: travels
+        kubevirt.io/domain: travels-vm
         kubevirt.io/size: small
-        app: travels
+        app: travels-vm
         version: v1
     spec:
       architecture: amd64
@@ -95,10 +95,10 @@ spec:
                   Environment=CURRENT_SERVICE='travels'
                   Environment=CURRENT_VERSION='v1'
                   Environment=LISTEN_ADDRESS=':8000'
-                  Environment=FLIGHTS_SERVICE='http://flights.travel-agency.svc.cluster.local:8000'
-                  Environment=HOTELS_SERVICE='http://hotels.travel-agency.svc.cluster.local:8000'
+                  Environment=FLIGHTS_SERVICE='http://flights-vm.travel-agency.svc.cluster.local:8000'
+                  Environment=HOTELS_SERVICE='http://hotels-vm.travel-agency.svc.cluster.local:8000'
                   Environment=CARS_SERVICE='http://cars-vm.travel-agency.svc.cluster.local:8000'
-                  Environment=INSURANCES_SERVICE='http://insurances.travel-agency.svc.cluster.local:8000'
+                  Environment=INSURANCES_SERVICE='http://insurances-vm.travel-agency.svc.cluster.local:8000'
                   PodmanArgs=-p 8000:8000
 
                   [Install]

@@ -30,9 +30,9 @@ spec:
 #        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: flights
+        kubevirt.io/domain: flights-vm
         kubevirt.io/size: small
-        app: flights
+        app: flights-vm
         version: v1
     spec:
       architecture: amd64
@@ -95,10 +95,10 @@ spec:
                   Environment=CURRENT_SERVICE='flights'
                   Environment=CURRENT_VERSION='v1
                   Environment=LISTEN_ADDRESS=':8000'
-                  Environment=MYSQL_SERVICE='mysqldb.travel-agency.svc.cluster.local:3306'
+                  Environment=MYSQL_SERVICE='mysqldb-vm.travel-agency.svc.cluster.local:3306'
                   Environment=MYSQL_USER='root'
                   Environment=MYSQL_PASSWORD='mysqldbpass'
-                  Environment=DISCOUNTS_SERVICE='http://discounts.travel-agency.svc.cluster.local:8000'
+                  Environment=DISCOUNTS_SERVICE='http://discounts-vm.travel-agency.svc.cluster.local:8000'
                   Environment=MYSQL_DATABASE='test'
                   PodmanArgs=-p 8000:8000
 
