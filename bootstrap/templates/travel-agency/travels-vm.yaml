@@ -97,7 +97,7 @@ spec:
                   Environment=LISTEN_ADDRESS=':8000'
                   Environment=FLIGHTS_SERVICE='http://flights.travel-agency.svc.cluster.local:8000'
                   Environment=HOTELS_SERVICE='http://hotels.travel-agency.svc.cluster.local:8000'
-                  Environment=CARS_SERVICE='http://cars.travel-agency.svc.cluster.local:8000'
+                  Environment=CARS_SERVICE='http://cars-vm.travel-agency.svc.cluster.local:8000'
                   Environment=INSURANCES_SERVICE='http://insurances.travel-agency.svc.cluster.local:8000'
                   PodmanArgs=-p 8000:8000
 
