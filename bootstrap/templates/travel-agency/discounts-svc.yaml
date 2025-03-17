@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: discounts
+  name: discounts-vm
   namespace: travel-agency
   labels:
-    app: discounts
+    app: discounts-vm
 spec:
   ports:
     - port: 8000
       name: tcp
   selector:
-    kubevirt.io/domain: discounts
+    kubevirt.io/domain: discounts-vm

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: insurances
+  name: insurances-vm
   namespace: travel-agency
   labels:
-    app: insurances
+    app: insurances-vm
 spec:
   ports:
     - port: 8000
       name: tcp
   selector:
-    kubevirt.io/domain: insurances
+    kubevirt.io/domain: insurances-vm

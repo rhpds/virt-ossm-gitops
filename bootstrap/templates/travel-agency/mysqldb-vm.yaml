@@ -30,9 +30,9 @@ spec:
 #        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: mysqldb
+        kubevirt.io/domain: mysqldb-vm
         kubevirt.io/size: small
-        app: mysqldb
+        app: mysqldb-vm
         version: v1
     spec:
       architecture: amd64

@@ -30,9 +30,9 @@ spec:
 #        sidecar.istio.io/inject: 'true'
       creationTimestamp: null
       labels:
-        kubevirt.io/domain: discounts
+        kubevirt.io/domain: discounts-vm
         kubevirt.io/size: small
-        app: discounts
+        app: discounts-vm
         version: v1
     spec:
       architecture: amd64

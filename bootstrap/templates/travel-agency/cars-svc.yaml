@@ -4,10 +4,10 @@ metadata:
   name: cars-vm
   namespace: travel-agency
   labels:
-    app: cars
+    app: cars-vm
 spec:
   ports:
     - port: 8000
       name: tcp
   selector:
-    kubevirt.io/domain: cars
+    kubevirt.io/domain: cars-vm
