@@ -87,7 +87,7 @@ spec:
               write_files:
               - content: |
                   [Unit]
-                  Description=Fedora Cars Container
+                  Description=Fedora Discounts Container
 
                   [Container]
                   Label=app=discounts-container
