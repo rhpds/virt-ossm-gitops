@@ -81,8 +81,9 @@ spec:
               chpasswd: { expire: False }
               ssh_pwauth: true
               runcmd:
-              - [ sudo, systemctl, daemon-reload ]
-              - [ sudo, systemctl, start, mysql-db.service ]
+                - loginctl enable-linger fedora
+                - su - fedora -c 'XDG_RUNTIME_DIR=/run/user/$(id -u) DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" systemctl --user daemon-reload'
+                - su - fedora -c 'XDG_RUNTIME_DIR=/run/user/$(id -u) DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus" systemctl --user start mysql-db.service'
               write_files:
               - content: |
                   [Unit]
