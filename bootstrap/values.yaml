@@ -4,7 +4,6 @@
 
 user: user1
 
-jobNamespace: users-job
 infoNamespace: openshift-gitops
 
 deployer:
