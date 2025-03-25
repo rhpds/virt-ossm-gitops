@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: travel-portal
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: {{ .Values.git.url }}
+    targetRevision: {{ .Values.git.revision }}
+    path: {{ .Values.portal.path }}
+    helm:
+      values: |
+        user: {{ .Values.user }}
+        domain: {{ .Values.deployer.domain }}
+        mykey: {{ .Values.portal.values.myKey }}
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated: {}

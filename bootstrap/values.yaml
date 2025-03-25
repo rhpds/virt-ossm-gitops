@@ -9,3 +9,22 @@ infoNamespace: openshift-gitops
 deployer:
   domain: apps.cluster-guid.sandbox.opentlc.com
   apiUrl: https://api.cluster-guid.sandbox.opentlc.com:6443
+
+git:
+  url: https://github.com/rhpds/virt-ossm-gitops
+  revision: main
+
+ossm:
+  path: ossm
+  values:
+    myKey: myValue
+
+agency:
+  path: travel-agency
+  values:
+    myKey: myValue
+
+portal:
+  path: travel-portal
+  values:
+    myKey: myValue
